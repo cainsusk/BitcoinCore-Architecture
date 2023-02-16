@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Cain Susko
+# 2023.02.15
+#
+# Compiles project slides using pandoc, beamer, and mermaid.
+# to run, you may need to use
+#       chmod +x ./compile
+#
+# to compile without graphs use
+#       ./compile [file-without-extension]
+#       ./compile a1presentation
+#
+# to compile with graphs use
+#       ./compile g [file-without-extension]
+#       ./compile g a1presentation
+
+if [ "$1" == "g" ]
+then
+        pandoc "$2.md" -t beamer --filter mermaid-filter -o "$2.pdf"
+else
+        pandoc "$1.md" -t beamer -o "$1.pdf"
+fi
+
