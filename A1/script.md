@@ -1,4 +1,15 @@
-# Introduction
+# Bitcoin
+Bitcoin is a unit of currency used to send, receive, and retain value among
+participants on the Bitcoin Network.
+
+Users on the Bitcoin network communicate directly with each other, rather than
+through a central server, in whats known as a Peer To Peer architecture.
+
+Users can access the network by running the Bitcoin Core protocol on nearly any
+computing device.
+
+
+# Bitcoin Core
 Bitcoin Core is the primary system for facilitating transactions using Bitcoin.
 It is the authoritative source for for how each part of the technology should be
 implemented.
@@ -6,16 +17,6 @@ implemented.
 Bitcoin Core uses a Peer to Peer (P2P) architecture where users validate each
 others' transactions using a shared `blockchain` -- rather than through
 a centralized server
-
-
-# Old privacy models
-The old model for privacy in transactions relied on a trusted third party to
-verify transactions
-
-
-# New privacy models
-Whereas this new model for privacy relies on users to validate transactions,
-allowing for a more democratic and equal financial system.
 
 
 # Block Chain
@@ -58,8 +59,8 @@ Wallets do not contain coins, but rather "keys" which prove ownership of coins
 on the network. Users "spend" their money by signing transactions with keys in
 their wallet. Keys are only stored in wallets, and not on the network.
 
-Bitcoin Core uses nondeterministic wallets, where the keys are generated randomly, and
-have no relation to each other.
+Bitcoin Core uses nondeterministic wallets, where the keys are generated
+randomly, and have no relation to each other.
 
 
 # Transactions
@@ -79,12 +80,11 @@ When looking at the system functionally, there are several layers we can define:
  - The Connection Layer
 
 
-# User Interface
+## User Interface
 The user interface is any client app using the Bitcoin Core protocol. This is
 the way that users interact with Bitcoin Core and it's network.
 
-
-# Bitcoin Core Protocol
+## Bitcoin Core Protocol
 The protocol can be any variation of nodes: Light, Full, Miner. This is the way
 the user interface performs functions defined by the Bitcoin Core protocol.
 
@@ -93,10 +93,46 @@ validated bu full or half nodes.
 
 This layer also manages the user's keys in their wallet.
 
-
-# Connection Layer
+## Connection Layer
 The connection layer is the way a Bitcoin client interfaces with the rest of the
 nodes in the Peer to Peer network.
+
+
+# Data Flow
+The transaction process begins with a node broadcasting a new transactions.
+
+This new transaction is then validated & aggregated with others from the same
+time stamp by a miner. This miner then generates & broadcasts the new block with
+it's proof of work -- or hash.
+
+Now, Full and Light nodes will receive this new block and attempt to verify it
+by checking that no key has already unlocked it's given value on the
+`blockchain`. If the block is verified -- it is then added to the `blockchain`
+to be checked against the next transaction.
+
+If the block is not verified, this means that a key in the block has already
+been spent on the block chain -- and it is thus rejected. 
+
+All transactions remain in the memory pool of pending transactions until
+complete -- so if a block is rejected but still contains valid transactions,
+those valid ones will eventually be allocated to a new block.
+
+
+# Concurrency
+TODO: `Yash` look over please :))
+
+When handling concurrency, Bitcoin Core uses a multi-threaded approach. A user
+can specify the number of threads allocated to the Bitcoin client (node).
+
+Dedicated threads are allocated to network communication as well as wallet
+management -- whereas the rest handle transactions and verification.
+
+Nodes can leave and rejoin the network without issue -- accepting
+the longest `blockchain` as the correct one.
+
+Furthermore, if there is a conflict between `blockchains`, the longest one takes
+precedence.
+
 
 # Development
 The Bitcoin Core system was developed in 2009 by Satoshi Nakamoto. The project
@@ -111,6 +147,10 @@ uninteresting features.
 
 Because of this, development of Bitcoin Core has been sporadic, with little
 organization.
+
+
+# Evolution
+TODO: `Yash` Add some info about evolution please :))
 
 
 # Lessons Learned
