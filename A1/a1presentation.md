@@ -4,7 +4,7 @@ title:
 author:
  - Cain Susko & Yash Patel
 theme:
- - Berkeley
+ - CambridgeUS
 colortheme: 
  - seagull
 date:
@@ -44,7 +44,8 @@ date:
 
 ## Peer to Peer
 ```mermaid
-graph LR;
+%%{init: {"theme": "forest"}}%%
+flowchart LR;
         peer1 --> peer2
         peer2 --> peer1
         peer3 --> peer1
@@ -61,6 +62,7 @@ graph LR;
 
 ## `Blockchain`
 ```mermaid
+%%{init: {"theme": "forest"}}%%
 stateDiagram-v2
         direction LR
 
@@ -98,6 +100,7 @@ on the P2P network.
 
 ## A Fully Featured Node
 ```mermaid
+%%{init: {"theme": "forest"}}%%
 stateDiagram-v2
         state My_Node {
                 Miner
@@ -117,6 +120,7 @@ stateDiagram-v2
 
 ## Layered Architecture
 ```mermaid
+%%{init: {"theme": "forest"}}%%
 flowchart LR;
         UI[User interface -- Wallet]
         BC[Bitcoin Core -- Miner & Blockchain]
@@ -176,6 +180,7 @@ A Wallet is the primary interface to control & access a user's Bitcoin.
 
 # Data Flow -- Miner
 ```mermaid
+%%{init: {"theme": "forest", "flowchart":{"diagramPadding": 70, "rankSpacing": 40}}}%%
 flowchart TD;
         A[Listen for new transactions]
         B[Are the transactions valid?]
@@ -209,6 +214,7 @@ between nodes -- and to decide which is the correct `blockchain`.
 
 # Consensus
 ```mermaid
+%%{init: {"theme": "forest"}}%%
 sequenceDiagram
         participant n as Node
         participant N as Network
