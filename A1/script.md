@@ -60,7 +60,9 @@ on the network. Users "spend" their money by signing transactions with keys in
 their wallet. Keys are only stored in wallets, and not on the network.
 
 Bitcoin Core uses nondeterministic wallets, where the keys are generated
-randomly, and have no relation to each other.
+randomly, and have no relation to each other. Furthermore, while Bitcoin Core
+has an implementation for wallets -- it is only recommended for debugging
+purposes.
 
 
 # Transactions
@@ -105,6 +107,8 @@ This new transaction is then validated & aggregated with others from the same
 time stamp by a miner. This miner then generates & broadcasts the new block with
 it's proof of work -- or hash.
 
+chosen by highest fee !!
+
 Now, Full and Light nodes will receive this new block and attempt to verify it
 by checking that no key has already unlocked it's given value on the
 `blockchain`. If the block is verified -- it is then added to the `blockchain`
@@ -119,24 +123,29 @@ those valid ones will eventually be allocated to a new block.
 
 
 # Concurrency
-TODO: `Yash` look over please :))
+As transactions are broadcast, they are added to the memory pool of pending
+transactions on the P2P network. These are then verified and grouped into
+blocks with proof of work. The new blocks are once again broadcast to the P2P
+network.
 
-When handling concurrency, Bitcoin Core uses a multi-threaded approach. A user
-can specify the number of threads allocated to the Bitcoin client (node).
-
-Dedicated threads are allocated to network communication as well as wallet
-management -- whereas the rest handle transactions and verification.
+Light and Full nodes then fetch blocks from the network asynchronously and
+attempt to add them to their `blockchain`.
 
 Nodes can leave and rejoin the network without issue -- accepting
-the longest `blockchain` as the correct one.
+the longest `blockchain` as the correct one once it joins the network.
 
-Furthermore, if there is a conflict between `blockchains`, the longest one takes
-precedence.
-
+Furthermore, if there is a conflict or discrepancy when many transactions are
+occurring concurrently -- the longest `blockchain` with the most proof of work
+is accepted by nodes as their `blockchain`.
 
 # Development
 The Bitcoin Core system was developed in 2009 by Satoshi Nakamoto. The project
-has been open source since they left the project in 2010.
+has been open source since they left the project in 2010. 
+
+Because the project was initiated by only one person -- it is a relatively
+consistent code base in terms of basic methodologies/conventions. This helped
+aid the project to be taken up by more developers. (as nobody wants to work on
+a spaghetti code-base.)
 
 Like most open source projects, the responsibility division has been flexible.
 This allows developers to quickly implement features which they feel passionate
@@ -146,7 +155,8 @@ However, this also results in very little incentive to develop tedious or
 uninteresting features.
 
 Because of this, development of Bitcoin Core has been sporadic, with little
-organization.
+organization -- however there is still a concrete development process which
+must be followed to contribute to the system.
 
 
 # Evolution

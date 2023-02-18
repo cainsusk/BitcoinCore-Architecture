@@ -138,19 +138,6 @@ flowchart LR;
    one.
 
 
-# Control Flow
-```mermaid
-sequenceDiagram
-        participant n as Node
-        participant N as Network
-        participant m as Miner
-
-        n ->> N : Broadcast Transaction
-        N ->> m : Collect Transactions
-        m ->> N : Broadcast proof of work
-        N ->> n : Collect Block
-```
-
 # Data Flow -- Miner
 ```mermaid
 flowchart TD;
@@ -171,18 +158,33 @@ flowchart TD;
 ```
 
 # Concurrency
- - Multi-threaded approach for simultaneous execution of tasks (`blockchain`
-   download, transaction processing, block validation, network communication,
-   wallet management, scheduler control)
- - User can specify number of threads, size of work queue for RPC requests
- - Threads for HTTP requests from JSON-RPC interface
- - Dedicated threads for block validation and consensus rules
- - Network communication managed by network threads
- - Wallet management through dedicated threads
- - Scheduler controlled by set of threads for tasks at predetermined times
-   (chain check, flush of memory, wallet, and chain state)
- - Concurrency enhances functionality and efficiency, reducing time and
-   computational power required for individual tasks.
+Bitcoin Core nodes rely on decentralized consensus to ensure there are no discrepancies
+between nodes -- and to decide which is the correct `blockchain`.
+
+ - Independent verification of each transaction by every full node based on
+   a comprehensive list of criteria.
+ - Independent aggregation of those transactions into new blocks by mining
+   nodes, coupled with demonstrated computation through a Proof-of-Work
+   algorithm
+ - Independent verification of the new blocks by every node and assembly into a chain
+ - Independent selection, by every node, of the chain with the most cumulative
+   computation demonstrated through Proof-of-Work
+
+# Consensus
+```mermaid
+sequenceDiagram
+        participant n as Node
+        participant N as Network
+        participant m as Miner
+
+        N ->> n : Fetch longest proof of work
+        n ->> N : Broadcast Transaction
+        N ->> m : Fetch Transactions
+        m ->> N : Broadcast block & proof of work
+        N ->> n : Fetch Block
+        n ->> N : Broadcast new, longer blockchain
+```
+
 
 # Responsibility Division between Developers
  - Bitcoin Core developed by Satoshi Nakamoto in 2009 with goal of creating a
