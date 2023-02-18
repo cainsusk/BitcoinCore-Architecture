@@ -82,28 +82,30 @@ stateDiagram-v2
    merkle tree root)
  - Body contains all transaction data (on average, more than 1900 transactions)
 
-# Miner Nodes
- - Miner nodes pick transactions from pool of valid transactions, package into
-   blocks, and broadcast to nodes
- - Full nodes verify blocks and add to `blockchain`, reaching consensus and
-   adding to public ledger
- - Miners rewarded for adding blocks to `blockchain`
+# Nodes
+<!-- https://cypherpunks-core.github.io/bitcoinbook/ch08.html -->
+A node is any computing device running the Bitcoin Core protocol. A node can have
+any of three functions:
 
-# Light Nodes
- - Maintain only subset of `blockchain` and verify transactions using
-   simplified payment verification method
- - Designed for power and space constrained devices (e.g. smartphones)
- - Verify chain of blocks and link to transaction of interest
+ - Wallet -- manage user Bitcoin
+ - Miner -- Create proof of work for transactions
+ - Full `blockchain` -- A copy of the entire `blockcain`, for transaction verification
 
-# Wallets, Keys, and Transactions
- - Wallet is the primary user interface, controls access to user's money
- - Manages keys and addresses, tracks balance, creates and signs transactions
- - Does not contain bitcoin, but rather keys to "coins" on the network
+Additionally, all nodes have networking functions to send and receive messages
+on the P2P network.
 
-# Types of Wallets
- - Nondeterministic: keys independently generated, each key must be backed up
- - Deterministic (seeded): keys derived from common master key (seed), seed is
-   the only thing that needs to be backed up for efficient system.
+ - Network Routing 
+
+## A Fully Featured Node
+```mermaid
+stateDiagram-v2
+        state My_Node {
+                Miner
+                Network
+                Full_Blockchain
+                Wallet
+        }
+```
 
 # Node Architectural Style
  - Peer-to-peer architecture in operational view
@@ -116,13 +118,47 @@ stateDiagram-v2
 ## Layered Architecture
 ```mermaid
 flowchart LR;
-        UI[User interface]
-        BC[Bitcoin Core]
-        PP[Peer to Peer interface]
+        UI[User interface -- Wallet]
+        BC[Bitcoin Core -- Miner & Blockchain]
+        PP[Peer to Peer interface -- Network]
 
         UI <--> BC
         BC <--> PP
 ```
+
+# Full & Light Nodes
+
+## Full Nodes
+ - Contain complete copy of the `blockchain` -- Full `Blockchain`.
+ - Are the primary method of verifying transactions, using the complete chain.
+ - Broadcast a transaction to the network once verified.
+
+## Light Nodes
+ - Contain a subset of the `blockchain`.
+ - Use a simplified verification method, but still broadcast to the network
+   like Full nodes.
+ - Used in situations with limited computing resources.
+
+
+# Miner Nodes
+ - Collect verified transactions into blocks
+ - Generate a suitable proof of work for the newly created block
+   - This proof of work is a hash generated from the header of the block --
+     which must satisfy certain bounds to be accepted by the `blockchain`.
+
+They then broadcast this proof of work back to the P2P network -- where nodes
+can then add it to their `blockchain`.
+
+# Wallets, Keys, and Transactions
+A Wallet is the primary interface to control & access a user's Bitcoin.
+
+ - Manages keys and addresses, tracks balance, creates and signs transactions
+ - Does not contain Bitcoin, but rather keys to "coins" on the network
+
+## Types of Wallets
+ - Nondeterministic: keys independently generated, each key must be backed up
+ - Deterministic (seeded): keys derived from common master key (seed), seed is
+   the only thing that needs to be backed up for efficient system.
 
 # Control and Data flow
  - The secure transaction process begins with a timestamp server taking a hash
@@ -158,6 +194,7 @@ flowchart TD;
 ```
 
 # Concurrency
+<!-- https://cypherpunks-core.github.io/bitcoinbook/ch10.html -->
 Bitcoin Core nodes rely on decentralized consensus to ensure there are no discrepancies
 between nodes -- and to decide which is the correct `blockchain`.
 
