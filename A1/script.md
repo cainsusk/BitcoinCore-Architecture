@@ -35,6 +35,11 @@ on top -- and has unbounded size.
 The `blockchain` is transmitted and maintained by nodes, which are computer
 systems connected to the Internet & running the Bitcoin core protocol.
 
+A node can have the functions of: Miner, Full `Blockchain`, Wallet
+
+Additionally, all nodes have the function to communicate with other nodes on
+the network.
+
 Miner nodes are the workhorses of Bitcoin Core. They run a special version of
 the Bitcoin Core protocol which contains rules for how to generate blocks. Once
 a block is created, it is then broadcast to other nodes to be added to the
@@ -49,6 +54,15 @@ constantly updated as new blocks are found and used to extend the chain.
 
 Light nodes are nodes that maintain only a subset of the total `blockchain`
 which can verify transactions using a simplified verification method.
+
+
+# Functional Architecture
+In a functional sense, Nodes can be understood to have a layered architecture.
+Each node is made up of three layers:
+
+ - The User Interface
+ - Local Bitcoin Core Protocol
+ - The Connection Layer
 
 
 # Wallet
@@ -71,15 +85,6 @@ incoming block and look for the parent block hash.
 
 Once it finds the correct Parent block, the node has validated the incoming
 block and will add it to the `blockchain`.
-
-
-# Functional Architecture
-Now that we understand the system in an abstract sense, let us put it all together.
-
-When looking at the system functionally, there are several layers we can define:
- - The User Interface
- - Local Bitcoin Core Protocol
- - The Connection Layer
 
 
 ## User Interface
@@ -125,10 +130,10 @@ those valid ones will eventually be allocated to a new block.
 # Concurrency
 As transactions are broadcast, they are added to the memory pool of pending
 transactions on the P2P network. These are then verified and grouped into
-blocks with proof of work. The new blocks are once again broadcast to the P2P
-network.
+blocks with proof of work by miners. The new blocks are once again broadcast to
+the P2P network.
 
-Light and Full nodes then fetch blocks from the network asynchronously and
+Nodes then fetch blocks from the network asynchronously and
 attempt to add them to their `blockchain`.
 
 Nodes can leave and rejoin the network without issue -- accepting
@@ -160,7 +165,33 @@ must be followed to contribute to the system.
 
 
 # Evolution
-TODO: `Yash` Add some info about evolution please :))
+Bitcoin Core is a decentralized system that has been in development for over 10
+years. It supports various functionalities such as `blockchain`, transactions,
+contracts, wallets, payment processing, and a P2P network.
+
+Over the years, Bitcoin core has undergone various updates to their fee
+handling. They have added support for priority queues, and have introduced
+replace-by-fee. They allowed better user interaction with the fee handling
+system, and improved fee estimation by version 23.
+
+The wallet was also improved, as they introduced `blockchain` pruning for
+storage saving, scheduled tasks for user interaction improvements, multi-wallet
+support, and improved the coin selection algorithms.
+
+They also made a few quality of life improvements.
+
+They made a few GUI changes, which helps the human interaction with the whole
+system. They also improved the ease of use for more basic of users. The support
+for full hardware wallets was also added as it was sought after by the
+community.
+
+There were also a few security updates, which introduced tor support, higher
+privacy protection, and improved the overall security of the wallet.
+
+For the future, they plan to add Bitcoin script support, updating legacy code,
+improving storage efficiency, and improving the old security features. They are
+also interested in Quantum computing, as it is an up and coming reality that
+the Bitcoin core team will have to deal with.
 
 
 # Lessons Learned
