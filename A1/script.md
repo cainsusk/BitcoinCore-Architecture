@@ -3,7 +3,7 @@ Bitcoin is a unit of currency used to send, receive, and retain value among
 participants on the Bitcoin Network.
 
 Users on the Bitcoin network communicate directly with each other, rather than
-through a central server, in whats known as a Peer To Peer architecture.
+through a central server, in what's known as a Peer To Peer architecture.
 
 Users can access the network by running the Bitcoin Core protocol on nearly any
 computing device.
@@ -11,7 +11,7 @@ computing device.
 
 # Bitcoin Core
 Bitcoin Core is the primary system for facilitating transactions using Bitcoin.
-It is the authoritative source for for how each part of the technology should be
+It is the authoritative source for how each part of the technology should be
 implemented.
 
 Bitcoin Core uses a Peer to Peer (P2P) architecture where users validate each
@@ -23,12 +23,18 @@ a centralized server
 The `Blockchain` is a public record of all transactions made using Bitcoin.
 
 It is created through computationally expensive operations that generate
-a unique `block` which can be identified with a hash and represent the
+a unique `block` which can be identified with a hash and contain the
 transactions made at a given time. Each block is `backlinked` to it's `parent`
 block.
 
 The `blockchain` can be thought of as a stack, where the newest block is placed
-on top -- and has unbounded size.
+on top.
+
+# Blocks
+Blocks are a data structure which have two components: the header, and body.
+
+The header contains information for identifying a block -- whereas the body
+contains information about the transactions the block represents.
 
 
 # Nodes
@@ -46,7 +52,7 @@ a block is created, it is then broadcast to other nodes to be added to the
 `blockchain`.
 
 The process of creating blocks is the computationally expensive operation which
-ensures the security of Bitcoin. 
+ensures the security of Bitcoin.
 
 Full nodes maintain a local copy of the block chain -- starting at the initial
 block on the chain (aka the genesis block). The local copy of the chain is
@@ -120,7 +126,7 @@ by checking that no key has already unlocked it's given value on the
 to be checked against the next transaction.
 
 If the block is not verified, this means that a key in the block has already
-been spent on the block chain -- and it is thus rejected. 
+been spent on the block chain -- and it is thus rejected.
 
 All transactions remain in the memory pool of pending transactions until
 complete -- so if a block is rejected but still contains valid transactions,
@@ -145,7 +151,7 @@ is accepted by nodes as their `blockchain`.
 
 # Development
 The Bitcoin Core system was developed in 2009 by Satoshi Nakamoto. The project
-has been open source since they left the project in 2010. 
+has been open source since they left the project in 2010.
 
 Because the project was initiated by only one person -- it is a relatively
 consistent code base in terms of basic methodologies/conventions. This helped
@@ -195,19 +201,27 @@ the Bitcoin core team will have to deal with.
 
 
 # Lessons Learned
-Thus, through investigating the conceptual architecture of Bitcoin Core, we have
-found that through leveraging math and cryptography, Bitcoin Core is able to
-ensure security in a system without any third party verification. 
+Through poring over documentation we were able to derive and comprehend the
+conceptual architecture of Bitcoin Core. We found that the texts were
+dense and sometimes hard to initially understand -- however once we pruned the
+information down to what was strictly necessary, the conceptual architecture
+became much clearer.
 
-This is in stark contrast to any verification system before it -- and represents
-a new model for ensuring security in global, safety critical systems.
-
+Our research has taught us not only how Bitcoin works, but on a deeper level it
+has also taught us how to research more effectively through carefully selecting
+and pruning sources.
 
 # Limitations
 As of now, this report does not go into detail about the specific mathematical
 processes and implementation of Bitcoin Core -- but rather outlines the
-conceptual architecture which it follows. 
+conceptual architecture which it follows.
 
 However, the implementation of the system is critical to understanding how
 Bitcoin Core works, and must be explored further to get a firmer grasp of how
 the system operates fully.
+
+
+# Conclusion
+Thus, Bitcoin Core is a Asynchronous, Peer to Peer system which takes advantage
+of cryptography to send, receive, retain, and verify value over the internet --
+without the need for third party verification.

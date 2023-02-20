@@ -4,10 +4,11 @@ title:
 author:
  - Cain Susko & Yash Patel
 theme:
- - CambridgeUS
+ - Berkeley
 colortheme: 
  - seagull
 date:
+ - Februrary 19, 2023
 ---
 
 # What is Bitcoin?
@@ -42,16 +43,15 @@ date:
  - Nodes broadcast valid transactions to others, leading to agreement and
    addition to pool of valid transactions.
 
-## Peer to Peer
+## Figure 1 -- Peer to Peer interactions
 ```mermaid
-%%{init: {"theme": "forest"}}%%
+%%{init: {"theme": "forest", "state": {"useMaxWidth": false}}}%%
 flowchart LR;
         peer1 --> peer2
         peer2 --> peer1
         peer3 --> peer1
         peer2 --> peer3
 ```
-
 
 # `Blockchain` 
  - `Blockchain` is a back-linked list of blocks and transactions, can be
@@ -60,7 +60,7 @@ flowchart LR;
    through header
  - Genesis block is the first block ever created
 
-## `Blockchain`
+## Figure 2 -- Structure of the `Blockchain`
 ```mermaid
 %%{init: {"theme": "forest"}}%%
 stateDiagram-v2
@@ -84,6 +84,22 @@ stateDiagram-v2
    merkle tree root)
  - Body contains all transaction data (on average, more than 1900 transactions)
 
+## Figure 3 -- Structure of a block
+```mermaid
+%%{init: {"theme": "forest"}}%%
+stateDiagram-v2
+        state Block {
+        H : Header
+        B : Body
+        }
+        state H {
+        id : Identification Data
+        }
+        state B {
+        tr : Transaction Data
+        }
+```
+
 # Nodes
 <!-- https://cypherpunks-core.github.io/bitcoinbook/ch08.html -->
 A node is any computing device running the Bitcoin Core protocol. A node can have
@@ -98,7 +114,7 @@ on the P2P network.
 
  - Network Routing 
 
-## A Fully Featured Node
+## Figure 4 -- A Fully Featured Node
 ```mermaid
 %%{init: {"theme": "forest"}}%%
 stateDiagram-v2
@@ -118,7 +134,7 @@ stateDiagram-v2
  - Third layer: connection layer (peer-to-peer network for formatting, sending,
    and receiving messages)
 
-## Layered Architecture
+## Figure 5 -- Node layered architecture
 ```mermaid
 %%{init: {"theme": "forest"}}%%
 flowchart LR;
@@ -177,25 +193,50 @@ A Wallet is the primary interface to control & access a user's Bitcoin.
    rejoin the network, accepting the longest proof-of-work chain as the correct
    one.
 
-
-# Data Flow -- Miner
+# Figure 6 -- Data flow in Bitcoin Core
 ```mermaid
-%%{init: {"theme": "forest", "flowchart":{"diagramPadding": 70, "rankSpacing": 40}}}%%
-flowchart TD;
-        A[Listen for new transactions]
-        B[Are the transactions valid?]
-        B1[Discard]
-        B2[Add new block]
-        C[Compute hash of new block]
-        D[Is the hash value below the difficuly level?]
-        E[Broadcast Proof of Work to the network]
+%%{init: {"theme": "forest", "state": {"useMaxWidth": false, "fontSize": '30'}}}%%
+stateDiagram-v2
+        n :         <font size=3>Node
+        N :         <font size=3>Network
+        m :         <font size=3>Miner
+        state n {
+                T : <font size=3>New transaction
+                J : <font size=3>Add block to proof of work and Broadcast
+                F : <font size=3>Fetch longest blockchain
+        }
+        state N {
+                direction LR
+                P : <font size=3>Pending transactions
+                X : <font size=3>Pending blocks
+                BC: <font size=3>Blockchain
+        }
+        state m {
+                direction RL
+                A : <font size=3>Listen for new transactions
+                B : <font size=3>Are the transactions valid
+                B1: <font size=3>Discard
+                B2: <font size=3>Aggregate new block
+                C : <font size=3>Compute hash of new block
+                D : <font size=3>Is the hash value below the difficuly level
+                E : <font size=3>Broadcast Proof of Work
+        }
+        T --> P
+        P --> A
 
         A --> B
-        B -->|no| B1; B -->|yes| B2
+        B --> B1 : No
+        B --> B2 : Yes
         B2 --> C
         C --> D
-        D -->|no| A; D -->|yes| E
-        E --> A
+        D --> A : No
+        D --> E : Yes
+
+        E --> X
+        X --> J
+        J --> BC
+        BC --> F
+        F --> T
 ```
 
 # Concurrency
@@ -212,7 +253,7 @@ between nodes -- and to decide which is the correct `blockchain`.
  - Independent selection, by every node, of the chain with the most cumulative
    computation demonstrated through Proof-of-Work
 
-# Consensus
+# Figure 7 -- The process of Consensus 
 ```mermaid
 %%{init: {"theme": "forest"}}%%
 sequenceDiagram
@@ -220,12 +261,22 @@ sequenceDiagram
         participant N as Network
         participant m as Miner
 
-        N ->> n : Fetch longest proof of work
-        n ->> N : Broadcast Transaction
-        N ->> m : Fetch Transactions
-        m ->> N : Broadcast block & proof of work
-        N ->> n : Fetch Block
-        n ->> N : Broadcast new, longer blockchain
+        n ->>+ N : Fetch longest proof of work
+        N -->>- n : Send proof of work
+
+        n ->> N : Broadcast transaction
+
+        m ->>+ N : Fetch pending transactions
+        N -->>- m : Send transactions
+        
+        activate m
+        m ->>- N : Broadcast block & proof of work
+
+        n ->>+ N : Fetch new block
+        N -->>- n : Send block
+
+        activate n
+        n ->>- N : Broadcast new, longer blockchain
 ```
 
 
@@ -252,13 +303,13 @@ sequenceDiagram
 
 # Fee Handling
  - Fees are the amount paid to miner for including transaction in a block
- - In v12, low fee transactions may not be included in blocks, leading to v12
+ - In **v12**, low fee transactions may not be included in blocks, leading to **v12**
    introducing replace-by-fee
- - V13 improved replace-by-fee with child pays for parent policy
- - V14 allows users to prioritize transactions with higher fees
- - V15 implements toggle for replace-by-fee
- - V16 made replace-by-fee the norm, although users can opt out
- - V23 improved fee estimation by taking replace-by-fee transactions into
+ - **V13** improved replace-by-fee with child pays for parent policy
+ - **V14** allows users to prioritize transactions with higher fees
+ - **V15** implements toggle for replace-by-fee
+ - **V16** made replace-by-fee the norm, although users can opt out
+ - **V23** improved fee estimation by taking replace-by-fee transactions into
    account.
 
 # Wallet Implementation
@@ -272,7 +323,7 @@ sequenceDiagram
  - **V16** also introduced bech32 address format
  - **V17** improved coin selection for wallets with branch and bound algorithm
 
-# Further Walet Improvements
+# Further Wallet Improvements
  - **V20** introduced Descriptor and Watch-Only wallets
  - **V23** made descriptor wallets the default for improved backup and recovery
  - **V23** can spot typos in bech32 addresses.
@@ -298,7 +349,7 @@ sequenceDiagram
    nodes 2 extra outgoing connections to increase connection to honest nodes.
 
 # Future Steps
- - V24 introduces Miniscript support for Bitcoin Script programming language.
+ - **V24** introduces Miniscript support for Bitcoin Script programming language.
  - Ongoing evolution of the system: replacing old protocols, improving
    infrastructural calculations, etc.
  - Scalability and security are significant future steps.
@@ -311,7 +362,7 @@ sequenceDiagram
 
 
 # Final Thoughts
- - Through analysing the bitcoin core system we have found that it is a peer to
+ - Through analysing the Bitcoin core system we have found that it is a peer to
    peer network, relying on cryptography to ensure the validity of transactions.
  - The variation in node types allows for a flexible system -- which would be
    integral for any system relying on community participation
@@ -320,7 +371,34 @@ sequenceDiagram
  - The development of Bitcoin Core has been driven by a desire for greater
    freedom and has been aided by a large community of programmers around the
    world.
- - It is evident that Bitcoin Core is a sophisticated and and complex system.
+ - It is evident that Bitcoin Core is a sophisticated and complex system.
    While this report does not go into the implementation of the described
    architecture -- understanding this is integral to getting a firmer grasp of
    the overall operation of the system.
+
+# Conclusion
+Bitcoin Core is an asynchronous, peer to peer system -- using cryptography to
+send, receive, retain, and verify value over the Internet.
+
+## Figure 8 -- Bitcoin Core conceptual architecture
+```mermaid
+%%{init: {"theme": "forest"}}%%
+stateDiagram-v2
+        direction LR
+
+        PT: Node
+        VT: Network
+        MN: Node -- Miner
+
+        [*] --> PT : New transaction 
+        PT --> PT : Transactions invalid
+
+        PT --> VT : Transactions valid
+        VT --> MN : Transactions pending
+        MN --> MN : Compute proof of work
+        MN --> VT : Work & block is acceptable
+        VT --> PT : Blocks pending
+        PT --> VT : New Proof of Work
+        VT --> PT : Fetch longest Proof of Work
+```
+
