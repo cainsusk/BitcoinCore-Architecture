@@ -71,6 +71,24 @@ Each node is made up of three layers:
  - The Connection Layer
 
 
+## User Interface
+The user interface is any client app using the Bitcoin Core protocol. This is
+the way that users interact with Bitcoin Core and it's network.
+
+## Bitcoin Core Protocol
+The protocol can be any variation of nodes: Light, Full, Miner. This is the way
+the user interface performs functions defined by the Bitcoin Core protocol.
+
+Through this layer, Bitcoin can be generated with a miner -- or spent and
+validated bu full or half nodes.
+
+This layer also manages the user's keys in their wallet.
+
+## Connection Layer
+The connection layer is the way a Bitcoin client interfaces with the rest of the
+nodes in the Peer to Peer network.
+
+
 # Wallet
 A node can contain a user wallet, which is the primary way a user manages
 their Bitcoin and make transactions.
@@ -91,24 +109,6 @@ incoming block and look for the parent block hash.
 
 Once it finds the correct Parent block, the node has validated the incoming
 block and will add it to the `blockchain`.
-
-
-## User Interface
-The user interface is any client app using the Bitcoin Core protocol. This is
-the way that users interact with Bitcoin Core and it's network.
-
-## Bitcoin Core Protocol
-The protocol can be any variation of nodes: Light, Full, Miner. This is the way
-the user interface performs functions defined by the Bitcoin Core protocol.
-
-Through this layer, Bitcoin can be generated with a miner -- or spent and
-validated bu full or half nodes.
-
-This layer also manages the user's keys in their wallet.
-
-## Connection Layer
-The connection layer is the way a Bitcoin client interfaces with the rest of the
-nodes in the Peer to Peer network.
 
 
 # Data Flow
@@ -225,3 +225,7 @@ the system operates fully.
 Thus, Bitcoin Core is a Asynchronous, Peer to Peer system which takes advantage
 of cryptography to send, receive, retain, and verify value over the internet --
 without the need for third party verification.
+
+Crucially, this provides greater freedom and security to users -- allowing them
+to trust that no biased third party will influence the **objective** process of
+transaction verification.
